@@ -1,7 +1,7 @@
 ## The userNameUpdated Method
 
 - It is called when the user updates the content of the username field.
-- When this method is called, the view model checks to see iif the text entered represents a valid username.
+- When this method is called, the view model checks to see if the text entered represents a valid username.
 - If it does, and the content of the password text field is also valid, then the view model asks the view controller to enable the Login button.
 - Let's add the following tests:
 
@@ -72,27 +72,42 @@ extension LoginViewModelTests {
 }
 ```
 
+- Implement the needed changes in LoginViewModel
 
+```swift
+var userNameValidator:UserNameValidator?
+var userNameValidated:Bool
+var passwordValidated:Bool
 
-- Xxx
+init(view: LoginViewControllerProtocol) { 			
+  self.userNameValidated = false 		
+  self.passwordValidated = false
+  super.init()
+  self.view = view 
+}
 
-- xxx
+func userNameUpdated(_ value: String?) {
+	guard let value = value else { 				
+    view?.enableLoginButton(false) 
+    return
+	}
 
-  ```swift
-  code
-  ```
+  let validator = self.userNameValidator ?? UserNameValidator() 
+  userNameValidated = validator.validate(value)
 
-- fix the production code
+  if userNameValidated == false { 
+    view?.enableLoginButton(false) 
+    return
+	}
 
-  ```swift
-  code
-  ```
+  if passwordValidated == false { 
+    view?.enableLoginButton(false) 
+    return
+	}
+  
+	view?.enableLoginButton(true) 
+}
+```
 
-- add more tests
-
-  ```swift
-  code
-  ```
-
-- The tests are green, so the TDD of the SignupViewModel is completed.
+- Run the tests.
 
