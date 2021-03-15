@@ -77,37 +77,27 @@ extension LoginViewModelTests {
 - Implement the needed changes in LoginViewModel
 
 ```swift
-var userNameValidator:UserNameValidator?
-var userNameValidated:Bool
-var passwordValidated:Bool
-
-init(view: LoginViewControllerProtocol) { 			
-  self.userNameValidated = false 		
-  self.passwordValidated = false
-  super.init()
-  self.view = view 
-}
-
-func userNameUpdated(_ value: String?) {
-	guard let value = value else { 				
-    view?.enableLoginButton(false) 
-    return
-	}
-
-  let validator = self.userNameValidator ?? UserNameValidator() 
-  userNameValidated = validator.validate(value)
-
-  if userNameValidated == false { 
-    view?.enableLoginButton(false) 
-    return
-	}
-
-  if passwordValidated == false { 
+func passwordUpdated(_ value: String?) {
+	
+  guard let value = value else { 
     view?.enableLoginButton(false) 
     return
 	}
   
-	view?.enableLoginButton(true) 
+	let validator = self.passwordValidator ?? PasswordValidator() 	
+  passwordValidated = validator.validate(value)
+
+  if passwordValidated == false {
+    view?.enableLoginButton(false) 
+    return
+	}
+
+  if userNameValidated == false {
+    view?.enableLoginButton(false) 
+    return
+	}
+
+  view?.enableLoginButton(true) 
 }
 ```
 
